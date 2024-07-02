@@ -1,37 +1,119 @@
 #include "pattern.h"
 #include "Windows.h"
 
+#include<String>
+
+using namespace std;
+
+
+void menu() {
+
+    cout << "             *** Меню ***" << endl << endl;
+    cout << "1. Создать новый контакт;" << endl;
+    cout << "2. Просмотреть список контактов;" << endl;
+    cout << "3. Выход;" << endl << endl;
+    cout << "Выберите пункт меню для дальнейшей работы: " << endl;
+}
+
 
 int main() {
 
-    setlocale(LC_ALL, "Russian");
+    setlocale(0, "Russian");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    Contact* contact1 = new Contact("Софья", "9158881811", "remnyovasofia@example.com");
-    Contact* contact2 = new Contact("Александр", "9108556996", "alex@example.com");
-
-
-    ContactGroup* group1 = new ContactGroup("Семья");
-    group1->addContact(contact1);
-    group1->addContact(contact2);
-
-    Contact* contact3 = new Contact("Евгений", "9876543322", "zhenya@example.com");
-    Contact* contact4 = new Contact("Денис", "9108555556", "Denis@example.com");
-
-    ContactGroup* group2 = new ContactGroup("Учеба");
-    group2->addContact(contact3);
-    group1->addContact(contact4);
 
     ContactGroup* allContacts = new ContactGroup(" ***  Все контакты  ***");
-    allContacts->addContact(group1);
-    allContacts->addContact(group2);
+    ContactGroup* groupFamily = new ContactGroup("Семья");
+    ContactGroup* groupStudy = new ContactGroup("Учеба");
+    ContactGroup* groupWork = new ContactGroup("Работа");
+    ContactGroup* groupFriends = new ContactGroup("Друзья");
 
-    allContacts->display();
-    system("pause");
+    int num;
 
-    // Очистка памяти
-    delete allContacts;
+    menu();
 
-    return 0;
+    cin >> num;
+
+    while (num) {
+
+        switch (num) {
+
+        case 1:
+
+            system("cls");
+            while (true)
+            {
+                system("cls");
+
+                cout << "                    *** Новый контакт ***" << endl << endl;
+                string name, phone, email;
+                cout << "Введите имя контакта: " << endl;
+                cin >> name;
+                cout << "Введите номер телефона: " << endl;
+                cin >> phone;
+                cout << "Введите адрес электронной почты: " << endl;
+                cin >> email;
+                Contact* newContact = new Contact(name, phone, email);
+
+                int group;
+                char choise;
+
+                cout << "В какую группу добавить контакт? (Выберите цифру) " << endl;
+                cout << "1 - семья,  2- учеба, 3 - работа, 4 - друзья, 5 - не отсортировывать" << endl;
+
+                cin >> group;
+
+                if (group == 1) {
+                    allContacts->addContact(groupFamily);
+                    groupFamily->addContact(newContact);
+                }
+                else if (group == 2) {
+                    allContacts->addContact(groupStudy);
+                    groupStudy->addContact(newContact);
+                }
+                else if (group == 3) {
+                    allContacts->addContact(groupWork);
+                    groupWork->addContact(newContact);
+
+                }
+                else if (group == 4) {
+                    allContacts->addContact(groupFriends);
+                    groupFriends->addContact(newContact);
+
+                }
+                else if (group == 5) {
+                    allContacts->addContact(newContact);
+                }
+                else {
+                    cout << "ERROR! Неверный выбор!";
+                }
+                while (true)
+                {
+                    cout << "Продолжить ввод? Введите д - если да, н - если нет" << endl;
+                    cin >> choise;
+                    if (choise == 'д' || choise == 'н') break;
+                }
+                if (choise == 'н') break;
+            }
+            system("cls");
+            menu();
+            cin >> num;
+
+        case 2:
+
+            system("cls");
+            allContacts->display();
+
+            system("pause");
+            system("cls");
+            menu();
+            cin >> num;
+            break;
+
+        case 3:
+            return 0;
+        }
+
+    }
 }
